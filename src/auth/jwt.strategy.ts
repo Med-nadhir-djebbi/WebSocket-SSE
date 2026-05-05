@@ -14,16 +14,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: 'my-secret-code-of-length-256-bits', 
+      secretOrKey: process.env.JWT_SECRET || 'my-secret-code-of-length-256-bits', 
     });
   }
 
   async validate(payload: any) {
-    const user = await this.userRepository.findOne({ where: { username: payload.username } });
-    
+    const user = await this.userRepository.findOne({ where: { id: payload.sub } });
+
     if (!user) {
       throw new UnauthorizedException('User not found');
-    }    
-    return user; 
+    }
+
+    return { id: user.id, username: user.username, role: user.role };
   }
 }

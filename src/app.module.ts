@@ -6,6 +6,7 @@ import { SkillModule } from './skill/skill.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
     CvModule,
     SkillModule,
     AuthModule,
+    EventEmitterModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
