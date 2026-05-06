@@ -7,6 +7,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { SseModule } from './sse/sse.module';
+
 @Module({
   imports: [
     TypeOrmModule.forRoot({
@@ -20,6 +22,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     SkillModule,
     AuthModule,
     EventEmitterModule.forRoot(),
+    SseModule,
   ],
   controllers: [AppController],
   providers: [AppService],
