@@ -6,13 +6,15 @@ import { RegisterUserDto } from './dto/register-user.dto';
 import { LoginCredentialsDto } from './dto/login-credentials.dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private jwtService: JwtService, 
+    private jwtService: JwtService,
+    private eventEmitter: EventEmitter2,
   ) {}
 
   async register(registerUserDto: RegisterUserDto): Promise<Partial<User>> {
@@ -28,6 +30,14 @@ export class AuthService {
 
     try {
       await this.userRepository.save(user);
+      this.eventEmitter.emit('user.registered', {
+        userId: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        date: new Date(),
+        source: 'http',
+      });
       return {
         id: user.id,
         username: user.username,
